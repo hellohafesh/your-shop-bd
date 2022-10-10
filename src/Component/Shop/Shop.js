@@ -1,24 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import Cart from '../Cart/Cart';
 import Product from '../Product/Product';
+import { addToDb, deleteShoppingCart, getStoredCard } from '../../utilities/fakedb'
 import './Shop.css';
+import { useLoaderData } from 'react-router-dom';
 
 const Shop = () => {
-    const [products, setproducts] = useState([]);
+    const products = useLoaderData();
     const [cart, setcart] = useState([]);
+    const clearCart = () => {
+        setcart([]);
+        deleteShoppingCart();
+    }
+
     useEffect(() => {
-        fetch('products.json')
-            .then(res => res.json())
-            .then(data => setproducts(data))
-    }, []);
+        const storecart = getStoredCard();
+        const savecart = [];
+        for (const id in storecart) {
+            const addedproduct = products.find(product => (product.id === id));
+
+            if (addedproduct) {
+                const quantity = storecart[id];
+                addedproduct.quantity = quantity;
+                savecart.push(addedproduct)
+            }
+        }
+        setcart(savecart);
+
+    }, [products]);
 
 
+    const handleAddToCart = (selectedProduct) => {
+        let newcart = [];
+        const exists = cart.find(product => product.id === selectedProduct.id);
+        if (!exists) {
+            selectedProduct.quantity = 1;
+            newcart = [...cart, selectedProduct];
+        } else {
+            const rest = cart.filter(product => product.id !== selectedProduct.id);
+            exists.quantity = exists.quantity + 1;
+            newcart = [...rest, exists];
+        }
 
-
-    const handleAddToCart = (product) => {
-        console.log(product)
-        const newcart = [...cart, product];
         setcart(newcart);
+        addToDb(selectedProduct.id)
     };
     return (
         <div className='shop-container'>
@@ -26,7 +51,7 @@ const Shop = () => {
                 {products.map(product => <Product key={product.id} product={product} handleAddToCart={handleAddToCart}></Product>)}
             </div>
             <div className="order-container">
-                <Cart cart={cart}></Cart>
+                <Cart clearCart={clearCart} cart={cart}></Cart>
             </div>
         </div>
     );

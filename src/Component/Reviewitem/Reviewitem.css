@@ -1,0 +1,49 @@
+.review img {
+    height: 91px;
+    width: 91px;
+}
+
+.review {
+    display: flex;
+    border: 1px solid black;
+    border-radius: 8px;
+    height: 107px;
+    width: 571px;
+    margin: 21px auto;
+    padding: 8px;
+}
+
+.reviw-details {
+    display: flex;
+    margin-left: 17px;
+    width: 100%;
+    justify-content: space-between;
+
+}
+
+.reviw-details p {
+    margin: 0;
+}
+
+.delete-con {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn {
+    height: 55px;
+    width: 55px;
+    border: 0;
+    border-radius: 50%;
+    background-color: rgba(235, 87, 87, 0.3);
+}
+
+.icon {
+    font-size: 31px;
+    color: #EB5757;
+}
+
+.btn:hover {
+    background-color: rgba(235, 87, 87, 0.5);
+}
